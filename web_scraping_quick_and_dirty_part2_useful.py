@@ -2,10 +2,10 @@
 
 import requests #module for web requests
 import sys 	#module for sys.exit() to terminate program on-demand
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-import datetime
+import smtplib #sending email
+from email.mime.text import MIMEText #formulating email text
+from email.mime.multipart import MIMEMultipart #formulating email
+import datetime #getting timestamp
 
 
 """
@@ -54,7 +54,8 @@ def parse_page_content(page_content):
 
 
 def send_email(price):
-    #https://docs.python.org/2/library/email-examples.html
+    """send_email() takes in the the price as a string and sends an email. Does not return anything."""
+
     from_gmail_user = "myspecialemailsender@gmail.com" #DON'T USE YOUR NORMAL EMAIL FOR THIS!
     to_gmail_user = "myspecialemailsender@gmail.com" #DON'T USE YOUR NORMAL EMAIL FOR THIS!
     gmail_password = "mytestpass123*"
@@ -76,25 +77,24 @@ def send_email(price):
         server.close()
 
         print "Email sent!"
-    except Exception as e:  
+    except Exception as e: #handle exception 
         print "Email not sent..."
         print e
 
 
 def write_to_file(price):
-    #https://www.datacamp.com/community/tutorials/reading-writing-files-python
-    #https://www.saltycrane.com/blog/2008/06/how-to-get-current-date-and-time-in/
-    #get the current date and time
-    now = datetime.datetime.now()
-    date_formatted = now.strftime("%Y-%m-%d %H:%M:%S")
+    """write_to_file() takes in the price and writes it to a file along with the timestamp"""
+
+    now = datetime.datetime.now() # get the current time
+    date_formatted = now.strftime("%Y-%m-%d %H:%M:%S") #format the time into Year-Month-Day Hour:Minute:Second
 
     #write to the file
     try:
-        with open("historical_price.txt", "a+") as myfile:
-            myfile.write("Couch Costs: $" + price + " (" + date_formatted + ")" + "\n--------\n")
+        with open("historical_price.txt", "a+") as myfile: #open historical_price.txt for appending. '+' means create the file if it doesn't exist. 
+            myfile.write("Couch Costs: $" + price + " (" + date_formatted + ")" + "\n--------\n") #write price and timestamp to file
             print "Date: " + date_formatted
             print "Wrote to file."
-    except Exception as e:
+    except Exception as e: #handle exception
         print "File not written..."
         print e
 
@@ -102,9 +102,8 @@ def write_to_file(price):
 if __name__ == "__main__":
     URL = "https://www.rcwilley.com/Furniture/Living-Room/Sectionals/Fabric/110950208/Beige-2-Piece-Sectional-Sofa-with-RAF-Chaise---Baltic-View.jsp"
     page_content = get_web_page(URL)
-    #print page_content
     couch_value = parse_page_content(page_content)
     write_to_file(couch_value)
     print "Couch costs $%s" % (couch_value)
-    if float(couch_value) < 1800:
+    if float(couch_value) < 1800: #make couch_value a number and compare and conditionally send email. 
         send_email(couch_value)

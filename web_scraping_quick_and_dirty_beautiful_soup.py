@@ -40,9 +40,9 @@ def get_web_page(URL):
 
 def parse_page_content(page_content):
     """parse_page_content() takes in the text of a web page and parses it looking for the cost of the couch, returning the cost"""
-    soup = BeautifulSoup(page_content, "html.parser")
+    soup = BeautifulSoup(page_content, "html.parser") #instantiate beautiful soup object with the htmo parser
     #print soup.prettify()
-    data = soup.find("meta", itemprop="price")
+    data = soup.find("meta", itemprop="price") #find the "meta" tag where itemprop="price"
     print data.get("content")
     return data.get("content")
 
